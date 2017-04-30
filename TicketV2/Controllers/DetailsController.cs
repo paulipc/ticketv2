@@ -15,9 +15,13 @@ namespace TicketV2.Controllers
         private ticketEntities db = new ticketEntities();
 
         // GET: Details
-        public ActionResult Index()
+        public ActionResult Index(int? id)
         {
-            var detail = db.Detail.Include(d => d.Ticket);
+            //var detail = db.Detail.Include(d => d.Ticket);
+            //var detail = db.Detail.Include(d => d.Ticket).(i => i.TicketID == id);
+            var detail = from b in db.Detail
+                         where b.TicketID == id
+                         select b;
             return View(detail.ToList());
         }
 
