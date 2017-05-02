@@ -17,6 +17,17 @@ namespace TicketV2.Controllers
         // GET: Details
         public ActionResult Index(int? id)
         {
+            if (id == null) {
+                var ticketid = db.Detail.Include(x => x.TicketID);
+            }
+            if (id == null) {
+                if (Session["TicketID"] != null) { 
+                    id = (int)Session["TicketID"];
+                }
+            }
+            // add session variable here and get ticketid into it
+            // then it can be used later when new detail is created
+            Session["TicketID"] = id;
             //var detail = db.Detail.Include(d => d.Ticket);
             //var detail = db.Detail.Include(d => d.Ticket).(i => i.TicketID == id);
             var detail = from b in db.Detail
@@ -52,8 +63,15 @@ namespace TicketV2.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "DetailID,TicketID,Created,UserID,DDescription")] Detail detail)
+        public ActionResult Create([Bind(Include = "DetailID,UserID,DDescription")] Detail detail)
         {
+
+            // these are moved outside of modelstate.isvalid if-clause 
+            // otherwise model is always invalid
+            // hidden view field used for transferring ticketid value to this method
+            detail.Created = DateTime.Now;
+            detail.TicketID = (int)Session["TicketID"];
+
             if (ModelState.IsValid)
             {
                 db.Detail.Add(detail);

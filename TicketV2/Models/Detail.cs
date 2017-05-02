@@ -11,7 +11,7 @@ namespace TicketV2.Models
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class Detail
     {
         public int DetailID { get; set; }
